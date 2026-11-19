@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Armado especial</title>
+  <link href="https://unpkg.com/primeng@17.18.0/resources/themes/lara-light-blue/theme.css" rel="stylesheet">
+  <link href="https://unpkg.com/primeicons@7.0.0/primeicons.css" rel="stylesheet" crossorigin="anonymous">
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --primary-color-hover: #0b5ed7;
+      --primary-color-text: #ffffff;
+      --primary-50: #eaf1fe;
+      --primary-100: #cfe2ff;
+      --focus-ring: rgba(13, 110, 253, 0.25);
+      --text-color: #212529;
+      --text-color-secondary: #6c757d;
+      --text-heading: #212529;
+      --surface-border: #dee2e6;
+      --surface-50: #f6f7f9;
+      --surface-100: #f3f4f6;
+      --surface-200: #e9ecef;
+      --surface-300: #ced4da;
+      --surface-700: #212529;
+      --surface-hover: #eef4ff;
+      --breadcrumb-link: #0d6efd;
+      --breadcrumb-link-hover: #0a58ca;
+      --breadcrumb-muted: #6c757d;
+      --btn-cancel: #6c757d;
+      --btn-success: #4caf50;
+      --btn-success-hover: #43a047;
+      --link-color: #0d6efd;
+      --link-hover: #0a58ca;
+      --danger-color: #dc3545;
+      --section-gap: 1rem;
+      --table-head-bg: #ffffff;
+      --table-head-text: #0d6efd;
+      --table-border: #dee2e6;
+      --table-stripe: #f6f7f9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+      background: #fff;
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .pi { font-style: normal; display: inline-block; min-width: 1em; line-height: 1; }
+
+    .page-shell { min-height: 100vh; display: flex; flex-direction: column; }
+    .page-content { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem 2rem 2.5rem; }
+    .page-content--wide { max-width: 100%; padding-left: 1.25rem; padding-right: 1.25rem; }
+
+    .breadcrumb { font-size: 0.875rem; color: var(--breadcrumb-muted); margin-bottom: 0.75rem; }
+    .breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; list-style: none; }
+    .breadcrumb li + li::before { content: "/"; margin-right: 0.35rem; color: var(--breadcrumb-muted); }
+    .breadcrumb a { color: var(--breadcrumb-link); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--breadcrumb-link-hover); text-decoration: underline; }
+    .breadcrumb li[aria-current="page"] { color: var(--breadcrumb-muted); }
+
+    .page-title { font-size: 1.8rem; font-weight: 600; color: var(--text-heading); margin-bottom: 1.25rem; }
+    .page-header-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+
+    .form-section { margin-bottom: 2rem; }
+    .section-head { padding-bottom: 0.6rem; margin-bottom: 1rem; border-bottom: 1px solid var(--surface-200); }
+    .section-title { font-size: 1.05rem; font-weight: 600; color: #334155; margin: 0; }
+
+    .form-grid { display: grid; gap: 1.25rem 1.5rem; }
+    .form-grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+    .field-label { font-size: 0.875rem; font-weight: 500; color: var(--text-color); }
+    .field-hint { font-size: 0.75rem; color: var(--text-color-secondary); line-height: 1.35; }
+    .field-error { font-size: 0.75rem; color: #dc2626; }
+    .info-tip { position: relative; display: inline-flex; align-items: center; margin-left: 0.35rem; color: var(--text-color-secondary); cursor: pointer; }
+    .info-tip .pi { font-size: 1.05rem; }
+    .info-tip:hover, .info-tip:focus-within { color: #1e3a8a; }
+    .info-tip__bubble {
+      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+      background: #1e293b; color: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 400; line-height: 1.35; width: max-content; max-width: 280px;
+      opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.15s ease; z-index: 60;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+    }
+    .info-tip__bubble::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1e293b; }
+    .info-tip:hover .info-tip__bubble, .info-tip:focus-within .info-tip__bubble { opacity: 1; visibility: visible; }
+    .info-tip--right .info-tip__bubble { left: auto; right: -0.4rem; transform: none; }
+    .info-tip--right .info-tip__bubble::after { left: auto; right: 0.55rem; transform: none; }
+    .field-inline { display: flex; align-items: center; gap: 0.5rem; }
+
+    .form-input, .form-select {
+      width: 100%;
+      min-height: 2.25rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.9rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text-color);
+      font-family: inherit;
+    }
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.65rem center;
+      padding-right: 2rem;
+      cursor: pointer;
+    }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-100); }
+    .form-input:disabled, .form-input[disabled] { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; cursor: not-allowed; opacity: 1; -webkit-text-fill-color: #94a3b8; }
+    .form-input.invalid, .form-select.invalid { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12); }
+
+    .unit-cubic sup { font-size: 0.62em; vertical-align: super; line-height: 0; font-weight: 600; }
+
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.5rem 1.1rem; min-height: 2.25rem; border: 1px solid var(--surface-300); background: #fff; border-radius: 6px;
+      font-size: 0.9rem; font-weight: 500; font-family: inherit; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+      text-decoration: none; color: inherit;
+    }
+    .btn-secondary { background: var(--btn-cancel); color: #fff; border-color: var(--btn-cancel); }
+    .btn-success { background: var(--btn-success); color: #fff; border-color: var(--btn-success); }
+    .btn-success:hover:not(:disabled) { background: var(--btn-success-hover); border-color: var(--btn-success-hover); }
+    .btn-primary { background: var(--primary-color); color: #fff; border-color: var(--primary-color); font-weight: 600; }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    .btn-danger { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .btn-outlined { background: #fff; color: #495057; border-color: #ced4da; font-weight: 500; }
+    .btn-outlined:hover:not(:disabled) { background: #f8fafc; border-color: #cbd5e1; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+
+    .table-toolbar {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;
+      padding-bottom: 0.75rem; flex-wrap: wrap; position: relative; z-index: 40;
+    }
+    .table-toolbar__left, .table-toolbar__right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .table-toolbar__left { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .btn-icon { padding: 0.45rem 0.7rem; gap: 0.4rem; }
+    .btn-icon .pi { font-size: 0.95rem; }
+    .btn-icon .pi-angle-down { font-size: 0.8rem; opacity: 0.9; }
+
+    .col-chooser-inline { display: inline-block; }
+    .col-chooser-link {
+      font-size: 0.875rem; color: var(--link-color); text-decoration: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 500;
+    }
+    .col-chooser-link:hover { text-decoration: underline; color: var(--link-hover); }
+    .col-chooser-inline__panel { margin: 0.35rem 0 0.65rem; }
+    .col-chooser-inline__panel.hidden { display: none; }
+    .col-chooser-inline__items { display: flex; flex-wrap: wrap; gap: 0.55rem 1.5rem; }
+    .col-chooser-inline__item { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.875rem; cursor: pointer; }
+    .col-chooser-inline__item input { accent-color: var(--primary-color); width: 1rem; height: 1rem; }
+
+    .export-menu { position: relative; }
+    .export-menu__panel {
+      position: absolute; top: calc(100% + 0.35rem); right: 0; min-width: 220px;
+      background: #fff; border: 1px solid var(--surface-200); border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); padding: 0.4rem 0; z-index: 50;
+    }
+    .export-menu__panel.hidden { display: none; }
+    .export-menu__item {
+      display: flex; align-items: center; gap: 0.7rem; width: 100%; padding: 0.55rem 1.1rem;
+      border: none; background: transparent; font-family: inherit; font-size: 0.9rem; color: #212529;
+      text-align: left; cursor: pointer;
+    }
+    .export-menu__item:hover { background: #f1f5f9; }
+    .export-menu__item .pi { font-size: 1.05rem; width: 1.2rem; text-align: center; flex-shrink: 0; }
+    #exportBtn[aria-expanded="true"] { background: #6c757d; border-color: #6c757d; color: #fff; }
+
+    .grid-summary { font-size: 0.875rem; color: var(--text-color); margin: 0 0 0.5rem; }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem 1.5rem; }
+    .checkbox-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-color); cursor: pointer; min-height: 2.25rem; }
+    .checkbox-item input { width: 1rem; height: 1rem; accent-color: var(--primary-color); cursor: pointer; }
+
+    .switch-field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .switch-row { display: flex; align-items: center; gap: 0.65rem; min-height: 2.25rem; }
+    .onoff-toggle {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      width: 4.25rem;
+      height: 1.85rem;
+      padding: 0;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      overflow: hidden;
+      font-family: inherit;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    .onoff-toggle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--primary-100); }
+    .onoff-toggle__on,
+    .onoff-toggle__off {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      user-select: none;
+      pointer-events: none;
+    }
+    .onoff-toggle .onoff-toggle__on { color: transparent; background: #fff; }
+    .onoff-toggle .onoff-toggle__off { color: #212529; background: #e9ecef; }
+    .onoff-toggle.is-on .onoff-toggle__on,
+    .onoff-toggle[aria-checked="true"] .onoff-toggle__on {
+      color: #fff;
+      background: var(--primary-color);
+    }
+    .onoff-toggle.is-on .onoff-toggle__off,
+    .onoff-toggle[aria-checked="true"] .onoff-toggle__off {
+      color: transparent;
+      background: #fff;
+    }
+
+    .card { background: #fff; border-radius: 0; box-shadow: none; overflow: visible; margin-top: 0; }
+    .data-table-scroll-pane { width: 100%; overflow-x: auto; }
+    .data-table { border-collapse: collapse; font-size: 0.875rem; width: 100%; min-width: 1600px; background: #fff; }
+    .data-table th, .data-table td {
+      padding: 0.55rem 0.75rem; text-align: center; border: 1px solid var(--table-border); vertical-align: middle;
+    }
+    .data-table thead tr.header-row { background: var(--table-head-bg); }
+    .data-table thead tr.header-row th {
+      font-weight: 700; color: var(--link-color); font-size: 0.875rem; text-align: left;
+      border-bottom: 2px solid var(--table-border); white-space: normal;
+    }
+    .data-table thead tr.header-row th.sortable .col-header-text { cursor: pointer; text-decoration: underline; }
+    .data-table thead tr.header-row th.sortable .col-header-text:hover { color: var(--link-hover); }
+    .col-header-content { display: inline-flex; align-items: center; gap: 0.35rem; width: 100%; justify-content: space-between; }
+    .col-header-text { white-space: normal; line-height: 1.3; text-align: left; }
+    .sort-icon { font-size: 0.75rem; color: var(--link-color); flex-shrink: 0; }
+    .data-table thead tr.filter-row { background: var(--table-head-bg); }
+    .data-table thead tr.filter-row th { padding: 6px 8px; font-weight: 400; vertical-align: middle; border-top: none; }
+    .table-filter-input, .table-filter-select {
+      width: 100%; height: 34px; padding: 0 8px; border: 1px solid #ced4da; border-radius: 0.25rem;
+      font-family: inherit; font-size: 0.875rem; color: var(--text-color); background: #fff; outline: none;
+    }
+    .table-filter-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat; background-position: right 0.5rem center; padding-right: 1.6rem;
+    }
+    .table-filter-input:focus, .table-filter-select:focus {
+      border-color: #86b7fe; box-shadow: 0 0 0 0.2rem var(--focus-ring);
+    }
+    .data-table tbody tr { background: #fff; color: var(--text-color); }
+    .data-table tbody tr:nth-child(odd) { background: var(--table-stripe); }
+    .data-table tbody tr:hover td { background: var(--surface-hover); }
+    .data-table td { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; text-align: left; }
+    .data-table td.col-actions, .data-table th.col-actions { overflow: visible; width: 110px; white-space: nowrap; max-width: none; text-align: center; }
+
+    .row-actions { display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+    .table-action-btn {
+      display: inline-flex; align-items: center; justify-content: center; width: auto; height: auto;
+      padding: 0; border: none; background: transparent; color: var(--link-color); cursor: pointer; font-size: 1rem;
+    }
+    .table-action-btn:hover { color: var(--link-hover); }
+    .table-action-btn--danger { color: var(--danger-color); }
+    .table-action-btn--danger:hover { color: #bb2d3b; }
+
+    .table-paginator {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.85rem 0 0; border-top: none; background: transparent;
+    }
+    .table-paginator__cluster { display: inline-flex; align-items: center; gap: 0; flex-wrap: wrap; justify-content: center; }
+    .table-paginator__pages { display: inline-flex; align-items: center; gap: 0; }
+    .table-pag-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 2rem; height: 2rem; padding: 0 0.5rem; border: 1px solid #dee2e6;
+      margin-left: -1px; border-radius: 0; background: #fff; color: var(--link-color); cursor: pointer; font-size: 0.875rem;
+    }
+    #pagFirst { border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; margin-left: 0; }
+    #pagLast { border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
+    .table-pag-btn:hover:not(:disabled) { background: #e9ecef; color: var(--link-hover); z-index: 1; }
+    .table-pag-btn.is-active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); font-weight: 600; z-index: 2; }
+    .table-pag-btn:disabled { color: #adb5bd; background: #fff; cursor: default; pointer-events: none; }
+    .table-paginator__select {
+      height: 2rem; border: 1px solid #ced4da; border-radius: 0.25rem; font-size: 0.875rem;
+      padding: 0 0.5rem; margin-left: 0.75rem;
+    }
+
+    .view-hidden { display: none !important; }
+    .field-hidden { display: none !important; }
+
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1300;
+      background: #1e293b; color: #f8fafc; padding: 0.85rem 1.1rem; border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); max-width: 420px; font-size: 0.85rem;
+    }
+    .toast.hidden { display: none; }
+
+    .page-footer { margin-top: auto; padding: 0.65rem 1rem; text-align: center; font-size: 0.8rem; color: #9ca3af; background: #f3f4f6; border-top: 1px solid #e5e7eb; }
+
+    @media (max-width: 900px) {
+      .form-grid--3 { grid-template-columns: 1fr; }
+      .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+      .page-content { padding: 1.25rem 1rem 2rem; }
+      .page-title { font-size: 1.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main class="page-content" id="mainContent">
+
+      <!-- CONSULTA -->
+      <div id="listView" class="view-hidden">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <ol>
+            <li><a href="#" data-nav-list>Catálogos</a></li>
+            <li aria-current="page">Armado especial</li>
+          </ol>
+        </nav>
+        <div class="page-header-row">
+          <h1 class="page-title" style="margin-bottom:0;">Armado especial</h1>
+        </div>
+
+        <div class="table-toolbar">
+          <div class="table-toolbar__left">
+            <button type="button" class="btn btn-success" id="btnNuevoPerfil">Crear perfil de armado</button>
+            <div class="col-chooser-inline" id="listColChooser">
+              <a href="#" class="col-chooser-link" id="listColChooserBtn" role="button" aria-expanded="false" aria-controls="listColChooserPanel">Mostrar/Ocultar Columnas</a>
+            </div>
+          </div>
+          <div class="table-toolbar__right">
+            <div class="export-menu">
+              <button type="button" class="btn btn-outlined btn-icon" id="exportBtn" aria-haspopup="true" aria-expanded="false" aria-controls="exportMenuPanel" title="Exportar registros">
+                <i class="pi pi-external-link" aria-hidden="true"></i>
+                <i class="pi pi-angle-down" aria-hidden="true"></i>
+              </button>
+              <div id="exportMenuPanel" class="export-menu__panel hidden" role="menu" aria-label="Exportar registros">
+                <button type="button" class="export-menu__item" data-export="csv" role="menuitem"><i class="pi pi-file" aria-hidden="true"></i> CSV</button>
+                <button type="button" class="export-menu__item" data-export="xlsx" role="menuitem"><i class="pi pi-file-excel" aria-hidden="true"></i> Excel</button>
+                <button type="button" class="export-menu__item" data-export="pdf" role="menuitem"><i class="pi pi-file-pdf" aria-hidden="true"></i> PDF</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-chooser-inline__panel hidden" id="listColChooserPanel"></div>
+        <div class="grid-summary" id="listSummary"></div>
+
+        <div class="card">
+          <div class="data-table-scroll-pane">
+            <table class="data-table" id="listTable" aria-label="Perfiles de armado registrados">
+              <thead>
+                <tr class="header-row" id="listTableHead"></tr>
+                <tr class="filter-row" id="listTableFilterRow"></tr>
+              </thead>
+              <tbody id="profilesTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <nav class="table-paginator" aria-label="Paginación">
+          <div class="table-paginator__cluster">
+            <button type="button" class="table-pag-btn" id="pagFirst" aria-label="Primera página"><i class="pi pi-angle-double-left"></i></button>
+            <button type="button" class="table-pag-btn" id="pagPrev" aria-label="Página anterior"><i class="pi pi-angle-left"></i></button>
+            <div class="table-paginator__pages" id="pagPages"></div>
+            <button type="button" class="table-pag-btn" id="pagNext" aria-label="Página siguiente"><i class="pi pi-angle-right"></i></button>
+            <button type="button" class="table-pag-btn" id="pagLast" aria-label="Última página"><i class="pi pi-angle-double-right"></i></button>
+            <select id="pageSizeSelect" class="table-paginator__select" aria-label="Registros por página">
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </nav>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div id="formView" class="view-hidden">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <ol>
+            <li><a href="#" data-nav-list>Catálogos</a></li>
+            <li><a href="#" data-nav-list>Armado especial</a></li>
+            <li aria-current="page" id="formBreadcrumbCurrent">Crear perfil de armado</li>
+          </ol>
+        </nav>
+        <h1 class="page-title" id="formPageTitle">Crear perfil de armado</h1>
+
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Información básica</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fNombre">Nombre</label>
+              <input id="fNombre" type="text" class="form-input" maxlength="80" placeholder="Nombre del perfil" autocomplete="off">
+              <span class="field-error" id="fNombre-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fDescripcion">Descripción</label>
+              <input id="fDescripcion" type="text" class="form-input" maxlength="150" placeholder="Descripción" autocomplete="off">
+            </div>
+            <div class="field">
+              <label class="field-label" for="fTipoArmado">Tipo de armado</label>
+              <select id="fTipoArmado" class="form-select">
+                <option value="">Selecciona un tipo</option>
+                <option value="dona">Cubicuadre</option>
+                <option value="familia">Armado por familia</option>
+                <option value="tradicional-bultos">Armado tradicional y bultos</option>
+              </select>
+              <span class="field-error" id="fTipoArmado-error" hidden></span>
+            </div>
+            <div class="field field-hidden" data-req-bultos id="wrapMatriz">
+              <label class="field-label" for="fMatriz">Matriz de densidad</label>
+              <select id="fMatriz" class="form-select"></select>
+              <span class="field-error" id="fMatriz-error" hidden></span>
+            </div>
+            <div class="field field-hidden" data-req-bultos id="wrapValidarTienda">
+              <label class="checkbox-item" for="fValidarTienda">
+                <input id="fValidarTienda" type="checkbox">
+                <span>Validar existencia de tienda destino</span>
+              </label>
+            </div>
+            <div class="field field-hidden switch-field" data-req-bultos id="wrapInterfazManual">
+              <span class="field-label" id="fInterfazManualLabel">Ejecución de interfaz de salida de forma manual</span>
+              <div class="switch-row">
+                <button type="button" class="onoff-toggle" id="fInterfazManual" role="switch" aria-checked="false" aria-labelledby="fInterfazManualLabel">
+                  <span class="onoff-toggle__on" aria-hidden="true">ON</span>
+                  <span class="onoff-toggle__off" aria-hidden="true">OFF</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Restricciones de armado</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fTipoTarima">Tipo de tarima</label>
+              <select id="fTipoTarima" class="form-select"></select>
+              <span class="field-error" id="fTipoTarima-error" hidden></span>
+            </div>
+            <div class="field field-hidden" data-req-bultos id="wrapAlturaMin">
+              <label class="field-label" for="fAlturaMin">Altura mínima del armado (cm)</label>
+              <input id="fAlturaMin" type="number" step="0.01" min="0" class="form-input" placeholder="Centímetros">
+              <span class="field-error" id="fAlturaMin-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fAlturaMax">Altura máxima del armado (cm)</label>
+              <input id="fAlturaMax" type="number" step="0.01" min="0" class="form-input" placeholder="Centímetros">
+              <span class="field-error" id="fAlturaMax-error" hidden></span>
+            </div>
+            <div class="field" data-hide-bultos>
+              <label class="field-label" for="fCaraPrincipal">Lado de la cara principal</label>
+              <select id="fCaraPrincipal" class="form-select">
+                <option value="">Ninguno</option>
+                <option value="frontal">Frontal</option>
+                <option value="lateral">Lateral</option>
+              </select>
+            </div>
+            <div class="field" data-hide-bultos>
+              <label class="field-label" for="fSuperficie">Superficie de apoyo (%)</label>
+              <input id="fSuperficie" type="number" step="0.01" class="form-input" value="70">
+            </div>
+            <div class="field" data-hide-bultos>
+              <label class="field-label" for="fDesnivel">Desnivel entre cajas (cm)</label>
+              <input id="fDesnivel" type="number" step="0.01" class="form-input" value="1.5">
+            </div>
+            <div class="field" data-hide-bultos>
+              <label class="field-label" for="fWallUsage">Wall usage factor (%)</label>
+              <input id="fWallUsage" type="number" step="0.01" class="form-input" placeholder="%">
+            </div>
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaAlto">Alto (cm)</label>
+              <input id="fTarimaAlto" type="text" class="form-input" disabled>
+            </div>
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaAncho">Ancho (cm)</label>
+              <input id="fTarimaAncho" type="text" class="form-input" disabled>
+            </div>
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaLargo">Largo (cm)</label>
+              <input id="fTarimaLargo" type="text" class="form-input" disabled>
+            </div>
+            <div class="field field-hidden switch-field" data-req-bultos id="wrapLogicaEtiquetas">
+              <span class="field-label" id="fLogicaEtiquetasLabel">Lógica de etiquetas*</span>
+              <div class="switch-row">
+                <button type="button" class="onoff-toggle" id="fLogicaEtiquetas" role="switch" aria-checked="false" aria-labelledby="fLogicaEtiquetasLabel">
+                  <span class="onoff-toggle__on" aria-hidden="true">ON</span>
+                  <span class="onoff-toggle__off" aria-hidden="true">OFF</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section field-hidden" data-req-bultos id="bultosSection">
+          <div class="section-head"><h2 class="section-title">Restricciones de bultos</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fPesoMax">Peso máximo (kg)</label>
+              <input id="fPesoMax" type="number" step="0.01" min="0" class="form-input" placeholder="0.00">
+              <span class="field-error" id="fPesoMax-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fVolumenMax">Volumen máximo (<span class="unit-cubic">m<sup>3</sup></span>)</label>
+              <input id="fVolumenMax" type="number" step="0.001" min="0" class="form-input" placeholder="0.000">
+              <span class="field-error" id="fVolumenMax-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fContenedores">Contenedores máximos por tarima</label>
+              <input id="fContenedores" type="number" step="1" min="1" class="form-input" placeholder="0">
+              <span class="field-error" id="fContenedores-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fVolumenMaxTarimaBultos">Volumen máximo de tarima de bultos (<span class="unit-cubic">m<sup>3</sup></span>)</label>
+              <input id="fVolumenMaxTarimaBultos" type="number" step="0.001" min="0" class="form-input" placeholder="0.000">
+              <span class="field-error" id="fVolumenMaxTarimaBultos-error" hidden></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section field-hidden" data-req-bultos id="consolSection">
+          <div class="section-head"><h2 class="section-title">Restricciones de consolidación y secuencia</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field switch-field">
+              <span class="field-label" id="fPermitirConsolLabel">Permitir consolidación de órdenes de compra para consignatario</span>
+              <div class="switch-row">
+                <button type="button" class="onoff-toggle is-on" id="fPermitirConsol" role="switch" aria-checked="true" aria-labelledby="fPermitirConsolLabel">
+                  <span class="onoff-toggle__on" aria-hidden="true">ON</span>
+                  <span class="onoff-toggle__off" aria-hidden="true">OFF</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="fFormaConsol">Forma de consolidación de tiendas en tarima</label>
+              <select id="fFormaConsol" class="form-select">
+                <option value="libre">Libre</option>
+                <option value="secuencial-bultos">Secuencial por bultos</option>
+                <option value="cuadrantes">Por cuadrantes</option>
+              </select>
+              <span class="field-error" id="fFormaConsol-error" hidden></span>
+            </div>
+
+            <div class="field field-hidden" id="wrapAlturaMaxTienda">
+              <label class="field-label" for="fAlturaMaxTienda">Altura máxima de tienda para consolidar (cm)</label>
+              <input id="fAlturaMaxTienda" type="number" step="0.01" min="0" class="form-input" placeholder="Centímetros">
+              <span class="field-error" id="fAlturaMaxTienda-error" hidden></span>
+            </div>
+
+            <div class="field field-hidden" id="wrapMaxTiendasTarima">
+              <label class="field-label" for="fMaxTiendasTarima">Máximo de tiendas por tarima</label>
+              <input id="fMaxTiendasTarima" type="number" step="1" min="1" class="form-input" placeholder="Opcional">
+              <span class="field-error" id="fMaxTiendasTarima-error" hidden></span>
+            </div>
+
+            <div class="field switch-field">
+              <span class="field-label" id="fCargaInversaLabel">
+                Secuencia de carga inversa
+                <span class="info-tip info-tip--right" tabindex="0" role="note">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  <span class="info-tip__bubble">Activa la secuencia de carga inversa en la unidad de transporte.</span>
+                </span>
+              </span>
+              <div class="switch-row">
+                <button type="button" class="onoff-toggle" id="fCargaInversa" role="switch" aria-checked="false" aria-labelledby="fCargaInversaLabel">
+                  <span class="onoff-toggle__on" aria-hidden="true">ON</span>
+                  <span class="onoff-toggle__off" aria-hidden="true">OFF</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="field switch-field">
+              <span class="field-label" id="fPermitirEstibaLabel">
+                Permitir estiba de N tarimas
+                <span class="info-tip info-tip--right" tabindex="0" role="note">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  <span class="info-tip__bubble">Permite estibar tarimas en una misma posición de transporte si el espacio lo permite</span>
+                </span>
+              </span>
+              <div class="switch-row">
+                <button type="button" class="onoff-toggle" id="fPermitirEstiba" role="switch" aria-checked="false" aria-labelledby="fPermitirEstibaLabel">
+                  <span class="onoff-toggle__on" aria-hidden="true">ON</span>
+                  <span class="onoff-toggle__off" aria-hidden="true">OFF</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="field field-hidden" id="wrapMaxTarimasEstiba">
+              <label class="field-label" for="fMaxTarimasEstiba">Máximo de tarimas por estiba</label>
+              <input id="fMaxTarimasEstiba" type="number" step="1" min="1" class="form-input">
+              <span class="field-error" id="fMaxTarimasEstiba-error" hidden></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Configuraciones de transporte</h2></div>
+          <div class="checkbox-grid" id="transportGrid"></div>
+        </section>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+          <button type="button" class="btn btn-success" id="submitBtn">Crear</button>
+        </div>
+      </div>
+
+    </main>
+    <footer class="page-footer">3.35.134 ©Netlogistik 2026</footer>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = 'armadoEspecialProfiles_mod1026_v4';
+      var DENSITY_KEY = 'densityMatricesCatalog';
+      var CURRENT_USER = 'admin.wms';
+
+      var TARIMAS = [
+        { id: '', nombre: 'Ninguno', alto: null, ancho: null, largo: null },
+        { id: 'std-1210', nombre: 'Tarima estándar 1200x1000', alto: 14.5, ancho: 100, largo: 120 },
+        { id: 'usa-1208', nombre: 'Tarima americana 1200x800', alto: 14.4, ancho: 80, largo: 120 },
+        { id: 'eur-800', nombre: 'Tarima europea 800x1200', alto: 14.4, ancho: 80, largo: 120 },
+        { id: 'media-608', nombre: 'Media tarima 600x800', alto: 13.8, ancho: 60, largo: 80 }
+      ];
+
+      var TRANSPORTS = [
+        { id: 'predeterminado', label: 'Predeterminado', maxHeight: 220 },
+        { id: '15T', label: '15T', maxHeight: 200 },
+        { id: '35T', label: '35T', maxHeight: 240 },
+        { id: 'RBN', label: 'RBN', maxHeight: 210 },
+        { id: 'THN', label: 'THN', maxHeight: 190 },
+        { id: '48T', label: '48T', maxHeight: 250 },
+        { id: '53T', label: '53T', maxHeight: 260 }
+      ];
+
+      var CONTEXTO_PRODUCTO = { alturaMaxFamilia: 160, alturaMaxPosicion: 180 };
+
+      /* Defaults Sears: sin RFID; altura máx. tienda 0 cm; altura mín. armado 100 cm */
+      var SITE_DEFAULTS = {
+        label: 'Sears',
+        alturaMin: 100,
+        pesoMax: 24,
+        volumenMax: 0.96,
+        volumenMaxTarimaBultos: 0.96,
+        alturaMaxTiendaConsol: 0,
+        logicaEtiquetas: false
+      };
+
+      var NEW_FIELD_DEFAULTS = {
+        permitirConsolOc: true,
+        formaConsolTiendas: 'libre',
+        alturaMaxTiendaConsol: null,
+        maxTiendasPorTarima: null,
+        secuenciaCargaInversa: false,
+        permitirEstiba: false,
+        maxTarimasPorEstiba: null,
+        volumenMaxTarimaBultos: null,
+        logicaEtiquetas: false,
+        validarExistenciaTienda: false,
+        ejecucionInterfazSalidaManual: false
+      };
+
+      var editingId = null;
+      var listState = { filters: {}, page: 1, pageSize: 20, sortKey: 'id', sortDir: 'asc' };
+
+      /* Columnas como en OPS + campos nuevos HU */
+      var COLUMNS = [
+        { key: 'id', label: 'ID', visible: true, filter: 'text' },
+        { key: 'nombre', label: 'Nombre', visible: true, filter: 'text' },
+        { key: 'descripcion', label: 'Descripción', visible: true, filter: 'text' },
+        { key: 'tipoArmado', label: 'Tipo de armado', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' },
+          { value: 'Cubicuadre', label: 'Cubicuadre' },
+          { value: 'Armado por familia', label: 'Armado por familia' },
+          { value: 'Armado tradicional y bultos', label: 'Armado tradicional y bultos' }
+        ]},
+        { key: 'reportType', label: 'Report type', visible: true, filter: 'text' },
+        { key: 'logicaEtiquetas', label: 'Lógica de etiquetas', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'tipoEtiqueta', label: 'Tipo de etiqueta', visible: true, filter: 'text' },
+        { key: 'validarExistenciaTienda', label: 'Validar existencia de tienda', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'ejecucionInterfazSalidaManual', label: 'Ejecución de interfaz de salida de forma manual', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'alturaMax', label: 'Altura máxima del armado (cm)', visible: true, filter: 'text' },
+        { key: 'margenMaxAltura', label: 'Margen máximo en altura para tarimas completas (cm)', visible: true, filter: 'text' },
+        { key: 'validarLargoAncho', label: 'Validar largo y ancho', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'permitirDobleEstiba', label: 'Permitir doble estiba', visible: true, filter: 'text' },
+        { key: 'permitirSobrecargaRestos', label: 'Permitir sobrecarga de restos', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'agruparPorCliente', label: 'Agrupar por cliente', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'permitirConsolOc', label: 'Permitir consolidación de órdenes de compra para consignatario', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'formaConsolTiendas', label: 'Forma de consolidación de tiendas en tarima', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' },
+          { value: 'Libre', label: 'Libre' },
+          { value: 'Secuencial por bultos', label: 'Secuencial por bultos' },
+          { value: 'Por cuadrantes', label: 'Por cuadrantes' }
+        ]},
+        { key: 'alturaMaxTiendaConsol', label: 'Altura máxima de tienda para consolidar (cm)', visible: true, filter: 'text' },
+        { key: 'maxTiendasPorTarima', label: 'Máximo de tiendas por tarima', visible: true, filter: 'text' },
+        { key: 'secuenciaCargaInversa', label: 'Secuencia de carga inversa', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'permitirEstiba', label: 'Permitir estiba de N tarimas', visible: true, filter: 'select', options: [
+          { value: '', label: 'Todos' }, { value: 'Sí', label: 'Sí' }, { value: 'No', label: 'No' }
+        ]},
+        { key: 'maxTarimasPorEstiba', label: 'Máximo de tarimas por estiba', visible: true, filter: 'text' },
+        { key: 'updatedBy', label: 'Actualizado por', visible: false, filter: 'text' },
+        { key: 'updatedAt', label: 'Actualizado', visible: false, filter: 'text' }
+      ];
+
+      function $(id) { return document.getElementById(id); }
+
+      function formatDateTime(iso) {
+        if (!iso) return 'N/A';
+        return new Date(iso).toLocaleString('es-MX', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit'
+        });
+      }
+
+      function getActiveMatrices() {
+        var list = [];
+        try {
+          var raw = localStorage.getItem(DENSITY_KEY);
+          if (raw) {
+            list = JSON.parse(raw).filter(function (m) {
+              return !m.deleted && (m.estatus === undefined || m.estatus === 'Activa');
+            }).map(function (m) { return { id: m.id, nombre: m.nombre }; });
+          }
+        } catch (e) { list = []; }
+        if (!list.length) {
+          list = [
+            { id: 'MAT-DON-01', nombre: 'Matriz estándar dona' },
+            { id: 'MAT-BUL-01', nombre: 'Matriz bultos CD México' },
+            { id: 'MAT-BUL-02', nombre: 'Matriz bultos exportación' },
+            { id: 'MAT-SEARS-01', nombre: 'Matriz bultos Sears' }
+          ];
+        }
+        return list;
+      }
+
+      function normalizeProfile(rec) {
+        var out = Object.assign({}, rec);
+        if (out.permitirConsolOc === undefined) out.permitirConsolOc = NEW_FIELD_DEFAULTS.permitirConsolOc;
+        if (!out.formaConsolTiendas) out.formaConsolTiendas = NEW_FIELD_DEFAULTS.formaConsolTiendas;
+        if (out.alturaMaxTiendaConsol === undefined) {
+          out.alturaMaxTiendaConsol = out.formaConsolTiendas === 'cuadrantes'
+            ? SITE_DEFAULTS.alturaMaxTiendaConsol
+            : null;
+        }
+        if (out.maxTiendasPorTarima === undefined) out.maxTiendasPorTarima = null;
+        if (out.secuenciaCargaInversa === undefined) out.secuenciaCargaInversa = false;
+        if (out.permitirEstiba === undefined) out.permitirEstiba = false;
+        if (out.maxTarimasPorEstiba === undefined) out.maxTarimasPorEstiba = null;
+        if (out.volumenMaxTarimaBultos === undefined) {
+          out.volumenMaxTarimaBultos = out.volumenMax != null ? out.volumenMax : SITE_DEFAULTS.volumenMaxTarimaBultos;
+        }
+        if (out.logicaEtiquetas === undefined) out.logicaEtiquetas = false;
+        if (out.validarExistenciaTienda === undefined) out.validarExistenciaTienda = false;
+        if (out.ejecucionInterfazSalidaManual === undefined) out.ejecucionInterfazSalidaManual = false;
+        if (out.reportType === undefined) out.reportType = 'No configurado';
+        if (out.tipoEtiqueta === undefined) out.tipoEtiqueta = '';
+        if (out.margenMaxAltura === undefined) out.margenMaxAltura = 10;
+        if (out.validarLargoAncho === undefined) out.validarLargoAncho = false;
+        if (out.permitirDobleEstiba === undefined) out.permitirDobleEstiba = 'No';
+        if (out.permitirSobrecargaRestos === undefined) out.permitirSobrecargaRestos = true;
+        if (out.agruparPorCliente === undefined) out.agruparPorCliente = false;
+        return out;
+      }
+
+      function seedProfiles() {
+        var base = [
+          {
+            id: '0001', nombre: 'Cubicuadre general', descripcion: 'Perfil base cubicuadre',
+            tipoArmado: 'dona', reportType: 'No configurado', logicaEtiquetas: false, tipoEtiqueta: '',
+            validarExistenciaTienda: false, ejecucionInterfazSalidaManual: false, alturaMax: 180,
+            margenMaxAltura: 10, validarLargoAncho: false, permitirDobleEstiba: 'Al inicio',
+            permitirSobrecargaRestos: true, agruparPorCliente: false, tipoTarima: 'std-1210',
+            updatedBy: 'jperez', updatedAt: '2026-10-12T15:20:00', createdAt: '2026-09-01T10:00:00'
+          },
+          {
+            id: '0002', nombre: 'Bultos Sears centro', descripcion: 'Armado tradicional y bultos — CD centro',
+            tipoArmado: 'tradicional-bultos', reportType: 'No configurado', matriz: 'MAT-SEARS-01',
+            tipoTarima: 'usa-1208', alturaMin: 100, alturaMax: 160, pesoMax: 24, volumenMax: 0.96,
+            contenedores: 12, volumenMaxTarimaBultos: 0.96, logicaEtiquetas: false, tipoEtiqueta: '',
+            validarExistenciaTienda: false, ejecucionInterfazSalidaManual: false, margenMaxAltura: 10,
+            validarLargoAncho: false, permitirDobleEstiba: 'No', permitirSobrecargaRestos: true,
+            agruparPorCliente: false, permitirConsolOc: true, formaConsolTiendas: 'libre',
+            updatedBy: 'mlopez', updatedAt: '2026-11-05T11:45:00', createdAt: '2026-10-01T09:30:00'
+          },
+          {
+            id: '0003', nombre: 'Bultos Sears consolidado', descripcion: 'Consolidación por cuadrantes Sears',
+            tipoArmado: 'tradicional-bultos', reportType: 'Detailed report', matriz: 'MAT-SEARS-01',
+            tipoTarima: 'std-1210', alturaMin: 100, alturaMax: 180, pesoMax: 24, volumenMax: 0.96,
+            contenedores: 10, volumenMaxTarimaBultos: 0.96, logicaEtiquetas: false, tipoEtiqueta: '',
+            validarExistenciaTienda: true, ejecucionInterfazSalidaManual: false, margenMaxAltura: 10,
+            validarLargoAncho: false, permitirDobleEstiba: 'Al inicio', permitirSobrecargaRestos: true,
+            agruparPorCliente: false, permitirConsolOc: true, formaConsolTiendas: 'cuadrantes',
+            alturaMaxTiendaConsol: 0, maxTiendasPorTarima: 4, secuenciaCargaInversa: false,
+            permitirEstiba: false, updatedBy: 'admin.wms', updatedAt: '2026-11-18T17:00:00',
+            createdAt: '2026-11-10T13:15:00'
+          },
+          {
+            id: '0004', nombre: 'Armado por familia retail', descripcion: 'Agrupación por familia de producto',
+            tipoArmado: 'familia', reportType: 'Summary report', tipoTarima: 'eur-800', alturaMax: 170,
+            logicaEtiquetas: false, validarExistenciaTienda: false, ejecucionInterfazSalidaManual: false,
+            margenMaxAltura: 8, validarLargoAncho: true, permitirDobleEstiba: 'No',
+            permitirSobrecargaRestos: false, agruparPorCliente: true, updatedBy: 'rgarcia',
+            updatedAt: '2026-11-01T08:10:00', createdAt: '2026-08-20T16:00:00'
+          }
+        ];
+        var extra = [];
+        for (var i = 5; i <= 40; i++) {
+          var isBultos = i % 3 === 0;
+          extra.push(normalizeProfile({
+            id: String(i).padStart(4, '0'),
+            nombre: isBultos ? ('Bultos Sears ' + i) : (i % 3 === 1 ? ('Cubicuadre ' + i) : ('Familia ' + i)),
+            descripcion: 'Perfil demo ' + i,
+            tipoArmado: isBultos ? 'tradicional-bultos' : (i % 3 === 1 ? 'dona' : 'familia'),
+            reportType: 'No configurado',
+            matriz: isBultos ? 'MAT-SEARS-01' : '',
+            tipoTarima: 'std-1210',
+            alturaMin: isBultos ? 100 : null,
+            alturaMax: 160 + (i % 20),
+            pesoMax: isBultos ? 24 : null,
+            volumenMax: isBultos ? 0.96 : null,
+            contenedores: isBultos ? 12 : null,
+            volumenMaxTarimaBultos: isBultos ? 0.96 : null,
+            logicaEtiquetas: false,
+            validarExistenciaTienda: false,
+            ejecucionInterfazSalidaManual: false,
+            margenMaxAltura: 10,
+            validarLargoAncho: false,
+            permitirDobleEstiba: i % 2 === 0 ? 'Al inicio' : 'No',
+            permitirSobrecargaRestos: true,
+            agruparPorCliente: false,
+            permitirConsolOc: true,
+            formaConsolTiendas: isBultos ? (i % 2 === 0 ? 'libre' : 'secuencial-bultos') : 'libre',
+            updatedBy: 'admin.wms',
+            updatedAt: '2026-11-' + String((i % 27) + 1).padStart(2, '0') + 'T10:00:00',
+            createdAt: '2026-10-01T10:00:00'
+          }));
+        }
+        return base.map(normalizeProfile).concat(extra);
+      }
+
+      var Store = {
+        load: function () {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            var list;
+            if (!raw) {
+              list = seedProfiles();
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+              return list;
+            }
+            list = JSON.parse(raw).map(normalizeProfile);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            return list;
+          } catch (e) { return seedProfiles(); }
+        },
+        saveAll: function (r) { localStorage.setItem(STORAGE_KEY, JSON.stringify(r)); },
+        getById: function (id) {
+          return Store.load().find(function (r) { return r.id === id; }) || null;
+        },
+        upsert: function (rec) {
+          var all = Store.load();
+          var idx = all.findIndex(function (r) { return r.id === rec.id; });
+          if (idx === -1) all.push(rec); else all[idx] = rec;
+          Store.saveAll(all);
+        },
+        remove: function (id) {
+          Store.saveAll(Store.load().filter(function (r) { return r.id !== id; }));
+        }
+      };
+
+      function tipoLabel(t) {
+        return t === 'dona' ? 'Cubicuadre'
+          : t === 'familia' ? 'Armado por familia'
+          : t === 'tradicional-bultos' ? 'Armado tradicional y bultos'
+          : 'N/A';
+      }
+
+      function formaConsolLabel(v) {
+        return v === 'secuencial-bultos' ? 'Secuencial por bultos'
+          : v === 'cuadrantes' ? 'Por cuadrantes'
+          : v === 'libre' ? 'Libre'
+          : 'N/A';
+      }
+
+      function siNo(v) { return v ? 'Sí' : 'No'; }
+
+      function matrizNombre(id) {
+        var m = getActiveMatrices().find(function (x) { return x.id === id; });
+        return m ? m.nombre : (id || 'N/A');
+      }
+
+      function tarimaNombre(id) {
+        var t = TARIMAS.find(function (x) { return x.id === id; });
+        return t && t.id ? t.nombre : 'N/A';
+      }
+
+      function showToast(msg) {
+        var el = $('toast');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(function () { el.classList.add('hidden'); }, 3500);
+      }
+
+      function setError(id, msg) {
+        var input = $(id);
+        var err = $(id + '-error');
+        if (input) input.classList.toggle('invalid', !!msg);
+        if (err) { err.textContent = msg || ''; err.hidden = !msg; }
+      }
+
+      function clearErrors() {
+        [
+          'fNombre', 'fTipoArmado', 'fMatriz', 'fTipoTarima', 'fAlturaMin', 'fAlturaMax',
+          'fPesoMax', 'fVolumenMax', 'fContenedores', 'fVolumenMaxTarimaBultos',
+          'fFormaConsol', 'fAlturaMaxTienda', 'fMaxTiendasTarima', 'fMaxTarimasEstiba'
+        ].forEach(function (id) { setError(id, ''); });
+      }
+
+
+      function setSwitch(id, on) {
+        var btn = $(id);
+        if (!btn) return;
+        var active = !!on;
+        btn.setAttribute('aria-checked', active ? 'true' : 'false');
+        btn.classList.toggle('is-on', active);
+      }
+
+      function getSwitch(id) {
+        var btn = $(id);
+        return !!(btn && btn.getAttribute('aria-checked') === 'true');
+      }
+
+      function bindSwitch(id, onChange) {
+        var btn = $(id);
+        function toggle() {
+          setSwitch(id, !getSwitch(id));
+          if (onChange) onChange();
+        }
+        btn.addEventListener('click', toggle);
+        btn.addEventListener('keydown', function (e) {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+        });
+      }
+
+      function populateMatrices() {
+        var sel = $('fMatriz');
+        var current = sel.value;
+        sel.innerHTML = '<option value="">Selecciona una matriz de densidad</option>';
+        getActiveMatrices().forEach(function (m) {
+          var o = document.createElement('option');
+          o.value = m.id;
+          o.textContent = m.nombre;
+          sel.appendChild(o);
+        });
+        sel.value = current;
+      }
+
+      function populateTarimas() {
+        var sel = $('fTipoTarima');
+        sel.innerHTML = '';
+        TARIMAS.forEach(function (t) {
+          var o = document.createElement('option');
+          o.value = t.id;
+          o.textContent = t.nombre;
+          sel.appendChild(o);
+        });
+      }
+
+      function buildTransportGrid() {
+        var grid = $('transportGrid');
+        grid.innerHTML = '';
+        TRANSPORTS.forEach(function (t) {
+          var label = document.createElement('label');
+          label.className = 'checkbox-item';
+          label.innerHTML = '<input type="checkbox" value="' + t.id + '" data-transport> <span>' + t.label + '</span>';
+          grid.appendChild(label);
+        });
+      }
+
+      function applyTarimaDims() {
+        var t = TARIMAS.find(function (x) { return x.id === $('fTipoTarima').value; });
+        $('fTarimaAlto').value = t && t.alto != null ? t.alto : 'No aplica';
+        $('fTarimaAncho').value = t && t.ancho != null ? t.ancho : 'No aplica';
+        $('fTarimaLargo').value = t && t.largo != null ? t.largo : 'No aplica';
+      }
+
+      function alturaMaxTransporte() {
+        var checked = Array.prototype.slice.call(document.querySelectorAll('[data-transport]:checked'));
+        if (!checked.length) return Infinity;
+        return checked.reduce(function (min, cb) {
+          var t = TRANSPORTS.find(function (x) { return x.id === cb.value; });
+          return t ? Math.min(min, t.maxHeight) : min;
+        }, Infinity);
+      }
+
+      function computeAlturaMaxEfectiva() {
+        var candidatos = [alturaMaxTransporte(), CONTEXTO_PRODUCTO.alturaMaxFamilia, CONTEXTO_PRODUCTO.alturaMaxPosicion]
+          .filter(function (v) { return v !== Infinity && v != null && !isNaN(v); });
+        if (!candidatos.length) return null;
+        return Math.min.apply(null, candidatos);
+      }
+
+      function isBultos() { return $('fTipoArmado').value === 'tradicional-bultos'; }
+
+      function refreshConsolFields() {
+        var forma = $('fFormaConsol').value;
+        var showAltura = isBultos() && forma === 'cuadrantes';
+        var showMaxTiendas = isBultos() && (forma === 'secuencial-bultos' || forma === 'cuadrantes');
+        var showMaxEstiba = isBultos() && getSwitch('fPermitirEstiba');
+
+        $('wrapAlturaMaxTienda').classList.toggle('field-hidden', !showAltura);
+        $('wrapMaxTiendasTarima').classList.toggle('field-hidden', !showMaxTiendas);
+        $('wrapMaxTarimasEstiba').classList.toggle('field-hidden', !showMaxEstiba);
+
+        if (!showAltura) {
+          setError('fAlturaMaxTienda', '');
+        } else if ($('fAlturaMaxTienda').value === '' && editingId === null) {
+          $('fAlturaMaxTienda').value = SITE_DEFAULTS.alturaMaxTiendaConsol;
+        }
+
+        if (!showMaxTiendas) {
+          $('fMaxTiendasTarima').value = '';
+          setError('fMaxTiendasTarima', '');
+        }
+        if (!showMaxEstiba) {
+          $('fMaxTarimasEstiba').value = '';
+          setError('fMaxTarimasEstiba', '');
+        }
+      }
+
+      function refreshConditionalFields() {
+        var show = isBultos();
+        document.querySelectorAll('[data-req-bultos]').forEach(function (el) {
+          el.classList.toggle('field-hidden', !show);
+        });
+        document.querySelectorAll('[data-hide-bultos]').forEach(function (el) {
+          el.classList.toggle('field-hidden', show);
+        });
+        if (show) applyTarimaDims();
+        if (!show) {
+          setSwitch('fLogicaEtiquetas', false);
+          setSwitch('fInterfazManual', false);
+          $('fValidarTienda').checked = false;
+        } else {
+          /* Ambas cuentas: sin RFID */
+          if (editingId === null) setSwitch('fLogicaEtiquetas', false);
+        }
+        refreshConsolFields();
+      }
+
+      function applySiteDefaults() {
+        if (editingId !== null || !isBultos()) return;
+        var d = SITE_DEFAULTS;
+        if ($('fAlturaMin').value === '') $('fAlturaMin').value = d.alturaMin;
+        if ($('fPesoMax').value === '') $('fPesoMax').value = d.pesoMax;
+        if ($('fVolumenMax').value === '') $('fVolumenMax').value = d.volumenMax;
+        if ($('fVolumenMaxTarimaBultos').value === '') $('fVolumenMaxTarimaBultos').value = d.volumenMaxTarimaBultos;
+        setSwitch('fLogicaEtiquetas', false);
+        if ($('fFormaConsol').value === 'cuadrantes' && $('fAlturaMaxTienda').value === '') {
+          $('fAlturaMaxTienda').value = d.alturaMaxTiendaConsol;
+        }
+      }
+
+      function showView(name) {
+        $('listView').classList.toggle('view-hidden', name !== 'list');
+        $('formView').classList.toggle('view-hidden', name !== 'form');
+        $('mainContent').classList.toggle('page-content--wide', name === 'list');
+      }
+
+      function cellValue(r, key) {
+        var isB = r.tipoArmado === 'tradicional-bultos';
+        var na = 'N/A';
+        switch (key) {
+          case 'id': return r.id ? String(r.id).padStart(4, '0') : na;
+          case 'nombre': return r.nombre || na;
+          case 'descripcion': return r.descripcion || na;
+          case 'tipoArmado': return tipoLabel(r.tipoArmado);
+          case 'reportType': return r.reportType || na;
+          case 'logicaEtiquetas': return siNo(!!r.logicaEtiquetas);
+          case 'tipoEtiqueta': return r.tipoEtiqueta ? r.tipoEtiqueta : na;
+          case 'validarExistenciaTienda': return siNo(!!r.validarExistenciaTienda);
+          case 'ejecucionInterfazSalidaManual': return siNo(!!r.ejecucionInterfazSalidaManual);
+          case 'alturaMax': return r.alturaMax != null && r.alturaMax !== '' ? String(r.alturaMax) : na;
+          case 'margenMaxAltura': return r.margenMaxAltura != null && r.margenMaxAltura !== '' ? String(r.margenMaxAltura) : na;
+          case 'validarLargoAncho': return siNo(!!r.validarLargoAncho);
+          case 'permitirDobleEstiba': return r.permitirDobleEstiba || na;
+          case 'permitirSobrecargaRestos': return siNo(!!r.permitirSobrecargaRestos);
+          case 'agruparPorCliente': return siNo(!!r.agruparPorCliente);
+          case 'permitirConsolOc': return isB ? siNo(r.permitirConsolOc !== false) : na;
+          case 'formaConsolTiendas': return isB ? formaConsolLabel(r.formaConsolTiendas || 'libre') : na;
+          case 'alturaMaxTiendaConsol':
+            return isB && r.formaConsolTiendas === 'cuadrantes' && r.alturaMaxTiendaConsol != null
+              ? String(r.alturaMaxTiendaConsol) : na;
+          case 'maxTiendasPorTarima':
+            return isB && (r.formaConsolTiendas === 'secuencial-bultos' || r.formaConsolTiendas === 'cuadrantes')
+              ? (r.maxTiendasPorTarima != null ? String(r.maxTiendasPorTarima) : na)
+              : na;
+          case 'secuenciaCargaInversa': return isB ? siNo(!!r.secuenciaCargaInversa) : na;
+          case 'permitirEstiba': return isB ? siNo(!!r.permitirEstiba) : na;
+          case 'maxTarimasPorEstiba':
+            return isB && r.permitirEstiba && r.maxTarimasPorEstiba != null ? String(r.maxTarimasPorEstiba) : na;
+          case 'updatedBy': return r.updatedBy || na;
+          case 'updatedAt': return r.updatedAt ? formatDateTime(r.updatedAt) : na;
+          default: return na;
+        }
+      }
+
+      function getFilteredRecords() {
+        var rows = Store.load().map(normalizeProfile);
+        rows = rows.filter(function (row) {
+          return COLUMNS.every(function (col) {
+            var f = (listState.filters[col.key] || '').trim().toLowerCase();
+            if (!f) return true;
+            var val = cellValue(row, col.key).toLowerCase();
+            if (col.filter === 'select') return val === f;
+            return val.indexOf(f) !== -1;
+          });
+        });
+        var key = listState.sortKey;
+        var dir = listState.sortDir === 'desc' ? -1 : 1;
+        rows.sort(function (a, b) {
+          var va = cellValue(a, key);
+          var vb = cellValue(b, key);
+          var na = Number(va), nb = Number(vb);
+          if (va !== '' && vb !== '' && !isNaN(na) && !isNaN(nb)) return (na - nb) * dir;
+          return String(va).localeCompare(String(vb), 'es', { sensitivity: 'base' }) * dir;
+        });
+        return rows;
+      }
+
+      function renderPagination(totalPages) {
+        $('pagFirst').disabled = listState.page <= 1;
+        $('pagPrev').disabled = listState.page <= 1;
+        $('pagNext').disabled = listState.page >= totalPages;
+        $('pagLast').disabled = listState.page >= totalPages;
+        var pages = $('pagPages');
+        pages.innerHTML = '';
+        var maxButtons = 10;
+        var start = Math.max(1, listState.page - Math.floor(maxButtons / 2));
+        var end = Math.min(totalPages, start + maxButtons - 1);
+        start = Math.max(1, end - maxButtons + 1);
+        for (var i = start; i <= end; i++) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'table-pag-btn' + (i === listState.page ? ' is-active' : '');
+          btn.textContent = i;
+          btn.addEventListener('click', (function (p) {
+            return function () { listState.page = p; renderList(); };
+          })(i));
+          pages.appendChild(btn);
+        }
+      }
+
+      function renderList() {
+        var filtered = getFilteredRecords();
+        var totalPages = Math.max(1, Math.ceil(filtered.length / listState.pageSize) || 1);
+        if (listState.page > totalPages) listState.page = totalPages;
+        var start = (listState.page - 1) * listState.pageSize;
+        var pageRows = filtered.slice(start, start + listState.pageSize);
+        var visibleCols = COLUMNS.filter(function (c) { return c.visible; });
+
+        var head = $('listTableHead');
+        var filterRow = $('listTableFilterRow');
+        head.innerHTML = '';
+        filterRow.innerHTML = '';
+        visibleCols.forEach(function (col) {
+          var th = document.createElement('th');
+          th.className = 'sortable';
+          th.dataset.col = col.key;
+          var sortIcon = listState.sortKey === col.key
+            ? (listState.sortDir === 'asc' ? 'pi-sort-amount-up-alt' : 'pi-sort-amount-down')
+            : 'pi-sort-alt';
+          th.innerHTML = '<div class="col-header-content"><span class="col-header-text">' + col.label +
+            '</span><i class="pi ' + sortIcon + ' sort-icon" aria-hidden="true"></i></div>';
+          th.querySelector('.col-header-text').addEventListener('click', function () {
+            if (listState.sortKey === col.key) listState.sortDir = listState.sortDir === 'asc' ? 'desc' : 'asc';
+            else { listState.sortKey = col.key; listState.sortDir = 'asc'; }
+            renderList();
+          });
+          head.appendChild(th);
+
+          var fth = document.createElement('th');
+          if (col.filter === 'select') {
+            var sel = document.createElement('select');
+            sel.className = 'table-filter-select';
+            (col.options || []).forEach(function (opt) {
+              var o = document.createElement('option');
+              o.value = opt.value;
+              o.textContent = opt.label;
+              sel.appendChild(o);
+            });
+            sel.value = listState.filters[col.key] || '';
+            sel.addEventListener('change', function () {
+              listState.filters[col.key] = sel.value;
+              listState.page = 1;
+              renderList();
+            });
+            fth.appendChild(sel);
+          } else {
+            var inp = document.createElement('input');
+            inp.type = 'text';
+            inp.className = 'table-filter-input';
+            inp.value = listState.filters[col.key] || '';
+            inp.addEventListener('input', function () {
+              listState.filters[col.key] = inp.value;
+              listState.page = 1;
+              renderList();
+            });
+            fth.appendChild(inp);
+          }
+          filterRow.appendChild(fth);
+        });
+        var actH = document.createElement('th');
+        actH.textContent = 'Acciones';
+        actH.className = 'col-actions';
+        head.appendChild(actH);
+        var actF = document.createElement('th');
+        actF.className = 'col-actions';
+        filterRow.appendChild(actF);
+
+        var endIdx = filtered.length ? Math.min(start + pageRows.length, filtered.length) : 0;
+        $('listSummary').textContent = filtered.length
+          ? ('Mostrando ' + (start + 1) + '-' + endIdx + ' de ' + filtered.length + ' elemento' + (filtered.length === 1 ? '' : 's') + '.')
+          : 'Mostrando 0 elementos.';
+
+        var tbody = $('profilesTableBody');
+        tbody.innerHTML = '';
+        if (!pageRows.length) {
+          var empty = document.createElement('tr');
+          var td = document.createElement('td');
+          td.colSpan = visibleCols.length + 1;
+          td.textContent = 'No hay registros para mostrar.';
+          td.style.textAlign = 'center';
+          td.style.padding = '2rem';
+          empty.appendChild(td);
+          tbody.appendChild(empty);
+        } else {
+          pageRows.forEach(function (r) {
+            var tr = document.createElement('tr');
+            visibleCols.forEach(function (col) {
+              var td = document.createElement('td');
+              var val = cellValue(r, col.key);
+              td.textContent = val;
+              td.title = val;
+              tr.appendChild(td);
+            });
+            var actTd = document.createElement('td');
+            actTd.className = 'col-actions';
+            actTd.innerHTML =
+              '<div class="row-actions">' +
+                '<button type="button" class="table-action-btn" data-act="edit" data-id="' + r.id + '" title="Editar" aria-label="Editar"><i class="pi pi-pencil" aria-hidden="true"></i></button>' +
+                '<button type="button" class="table-action-btn table-action-btn--danger" data-act="del" data-id="' + r.id + '" title="Eliminar" aria-label="Eliminar"><i class="pi pi-trash" aria-hidden="true"></i></button>' +
+              '</div>';
+            tr.appendChild(actTd);
+            tbody.appendChild(tr);
+          });
+        }
+        renderPagination(totalPages);
+      }
+
+      function buildColumnPicker() {
+        var panel = $('listColChooserPanel');
+        panel.innerHTML = '<div class="col-chooser-inline__items"></div>';
+        var items = panel.querySelector('.col-chooser-inline__items');
+        COLUMNS.forEach(function (col) {
+          var label = document.createElement('label');
+          label.className = 'col-chooser-inline__item';
+          var cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.checked = col.visible;
+          cb.addEventListener('change', function () {
+            col.visible = cb.checked;
+            renderList();
+          });
+          label.appendChild(cb);
+          label.appendChild(document.createTextNode(' ' + col.label));
+          items.appendChild(label);
+        });
+      }
+
+      function exportRecords(format) {
+        var rows = getFilteredRecords();
+        var cols = COLUMNS.filter(function (c) { return c.visible; });
+        var headers = cols.map(function (c) { return c.label; });
+        var lines = rows.map(function (r) {
+          return cols.map(function (c) {
+            return '"' + String(cellValue(r, c.key)).replace(/"/g, '""') + '"';
+          }).join(',');
+        });
+        var csv = [headers.join(',')].concat(lines).join('\n');
+        var blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'armado-especial.' + (format === 'xlsx' ? 'xls' : (format === 'pdf' ? 'csv' : 'csv'));
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast('Exportación generada (' + rows.length + ' registro' + (rows.length === 1 ? '' : 's') + ').');
+      }
+
+      function openList() {
+        editingId = null;
+        showView('list');
+        renderList();
+      }
+
+      function resetForm() {
+        ['fNombre', 'fDescripcion', 'fMatriz', 'fAlturaMin', 'fAlturaMax', 'fWallUsage',
+          'fPesoMax', 'fVolumenMax', 'fContenedores', 'fVolumenMaxTarimaBultos',
+          'fAlturaMaxTienda', 'fMaxTiendasTarima', 'fMaxTarimasEstiba']
+          .forEach(function (id) { $(id).value = ''; });
+        $('fTipoArmado').value = 'tradicional-bultos';
+        $('fCaraPrincipal').value = '';
+        $('fSuperficie').value = '70';
+        $('fDesnivel').value = '1.5';
+        $('fTipoTarima').value = '';
+        $('fValidarTienda').checked = false;
+        $('fFormaConsol').value = 'libre';
+        setSwitch('fPermitirConsol', true);
+        setSwitch('fCargaInversa', false);
+        setSwitch('fPermitirEstiba', false);
+        setSwitch('fInterfazManual', false);
+        setSwitch('fLogicaEtiquetas', false);
+        document.querySelectorAll('[data-transport]').forEach(function (cb) { cb.checked = false; });
+        clearErrors();
+        applyTarimaDims();
+        refreshConditionalFields();
+      }
+
+      function loadProfile(rec) {
+        var r = normalizeProfile(rec);
+        $('fNombre').value = r.nombre || '';
+        $('fDescripcion').value = r.descripcion || '';
+        $('fTipoArmado').value = r.tipoArmado || '';
+        refreshConditionalFields();
+        populateMatrices();
+        $('fMatriz').value = r.matriz || '';
+        $('fTipoTarima').value = r.tipoTarima || '';
+        applyTarimaDims();
+        $('fAlturaMin').value = r.alturaMin != null ? r.alturaMin : '';
+        $('fAlturaMax').value = r.alturaMax != null ? r.alturaMax : '';
+        $('fCaraPrincipal').value = r.caraPrincipal || '';
+        $('fSuperficie').value = r.superficie != null ? r.superficie : '70';
+        $('fDesnivel').value = r.desnivel != null ? r.desnivel : '1.5';
+        $('fWallUsage').value = r.wallUsage != null ? r.wallUsage : '';
+        $('fPesoMax').value = r.pesoMax != null ? r.pesoMax : '';
+        $('fVolumenMax').value = r.volumenMax != null ? r.volumenMax : '';
+        $('fContenedores').value = r.contenedores != null ? r.contenedores : '';
+        $('fVolumenMaxTarimaBultos').value = r.volumenMaxTarimaBultos != null ? r.volumenMaxTarimaBultos : '';
+        $('fValidarTienda').checked = !!r.validarExistenciaTienda;
+        setSwitch('fInterfazManual', !!r.ejecucionInterfazSalidaManual);
+        setSwitch('fLogicaEtiquetas', !!r.logicaEtiquetas);
+        setSwitch('fPermitirConsol', r.permitirConsolOc !== false);
+        $('fFormaConsol').value = r.formaConsolTiendas || 'libre';
+        $('fAlturaMaxTienda').value = r.alturaMaxTiendaConsol != null ? r.alturaMaxTiendaConsol : '';
+        $('fMaxTiendasTarima').value = r.maxTiendasPorTarima != null ? r.maxTiendasPorTarima : '';
+        setSwitch('fCargaInversa', !!r.secuenciaCargaInversa);
+        setSwitch('fPermitirEstiba', !!r.permitirEstiba);
+        $('fMaxTarimasEstiba').value = r.maxTarimasPorEstiba != null ? r.maxTarimasPorEstiba : '';
+        document.querySelectorAll('[data-transport]').forEach(function (cb) {
+          cb.checked = (r.transportes || []).indexOf(cb.value) !== -1;
+        });
+        refreshConsolFields();
+      }
+
+      function openCreate() {
+        editingId = null;
+        resetForm();
+        populateMatrices();
+        applySiteDefaults();
+        $('formPageTitle').textContent = 'Crear perfil de armado';
+        $('formBreadcrumbCurrent').textContent = 'Crear perfil de armado';
+        $('submitBtn').textContent = 'Crear';
+        showView('form');
+      }
+
+      function openEdit(id) {
+        var rec = Store.getById(id);
+        if (!rec) { showToast('Perfil no encontrado.'); return; }
+        editingId = id;
+        resetForm();
+        populateMatrices();
+        loadProfile(rec);
+        $('formPageTitle').textContent = 'Editar perfil de armado';
+        $('formBreadcrumbCurrent').textContent = 'Editar perfil de armado';
+        $('submitBtn').textContent = 'Guardar';
+        showView('form');
+      }
+
+      function validate() {
+        clearErrors();
+        var ok = true;
+        if (!$('fNombre').value.trim()) { setError('fNombre', 'El nombre es obligatorio.'); ok = false; }
+        if (!$('fTipoArmado').value) { setError('fTipoArmado', 'El tipo de armado es obligatorio.'); ok = false; }
+
+        var maxVal = $('fAlturaMax').value;
+        if (maxVal !== '' && Number(maxVal) < 0) {
+          setError('fAlturaMax', 'Debe ser un valor decimal positivo (>= 0).');
+          ok = false;
+        }
+
+        if (isBultos()) {
+          if (!$('fMatriz').value) { setError('fMatriz', 'Selecciona una matriz de densidad.'); ok = false; }
+          if (!$('fTipoTarima').value) { setError('fTipoTarima', 'Selecciona el tipo de tarima.'); ok = false; }
+
+          var minVal = $('fAlturaMin').value;
+          if (minVal === '') { setError('fAlturaMin', 'La altura mínima es obligatoria.'); ok = false; }
+          else if (Number(minVal) < 0) { setError('fAlturaMin', 'Debe ser un valor decimal positivo (>= 0).'); ok = false; }
+
+          var peso = $('fPesoMax').value;
+          if (peso === '') { setError('fPesoMax', 'El peso máximo es obligatorio.'); ok = false; }
+          else if (Number(peso) <= 0) { setError('fPesoMax', 'Debe ser un valor decimal positivo.'); ok = false; }
+
+          var vol = $('fVolumenMax').value;
+          if (vol === '') { setError('fVolumenMax', 'El volumen máximo es obligatorio.'); ok = false; }
+          else if (Number(vol) <= 0) { setError('fVolumenMax', 'Debe ser un valor decimal positivo.'); ok = false; }
+
+          var cont = $('fContenedores').value;
+          if (cont === '') { setError('fContenedores', 'Los contenedores máximos son obligatorios.'); ok = false; }
+          else if (!Number.isInteger(Number(cont)) || Number(cont) <= 0) {
+            setError('fContenedores', 'Debe ser un número entero positivo.');
+            ok = false;
+          }
+
+          var volTar = $('fVolumenMaxTarimaBultos').value;
+          if (volTar === '') { setError('fVolumenMaxTarimaBultos', 'El volumen máximo de tarima de bultos es obligatorio.'); ok = false; }
+          else if (Number(volTar) <= 0) { setError('fVolumenMaxTarimaBultos', 'Debe ser un valor decimal positivo.'); ok = false; }
+
+          if (!$('fFormaConsol').value) {
+            setError('fFormaConsol', 'Selecciona la forma de consolidación.');
+            ok = false;
+          }
+
+          if ($('fFormaConsol').value === 'cuadrantes') {
+            var altTienda = $('fAlturaMaxTienda').value;
+            if (altTienda === '') {
+              setError('fAlturaMaxTienda', 'La altura máxima de tienda para consolidar es obligatoria.');
+              ok = false;
+            } else if (Number(altTienda) < 0) {
+              setError('fAlturaMaxTienda', 'Debe ser un valor decimal positivo (>= 0).');
+              ok = false;
+            }
+          }
+
+          var maxTiendas = $('fMaxTiendasTarima').value;
+          if (maxTiendas !== '' && (!Number.isInteger(Number(maxTiendas)) || Number(maxTiendas) <= 0)) {
+            setError('fMaxTiendasTarima', 'Debe ser un número entero positivo o dejarse vacío.');
+            ok = false;
+          }
+
+          if (getSwitch('fPermitirEstiba')) {
+            var maxEstiba = $('fMaxTarimasEstiba').value;
+            if (maxEstiba === '') {
+              setError('fMaxTarimasEstiba', 'Indica el máximo de tarimas por estiba.');
+              ok = false;
+            } else if (!Number.isInteger(Number(maxEstiba)) || Number(maxEstiba) <= 0) {
+              setError('fMaxTarimasEstiba', 'Debe ser un número entero positivo.');
+              ok = false;
+            }
+          }
+        }
+        return ok;
+      }
+
+      function collectValues() {
+        var transportes = Array.prototype.slice
+          .call(document.querySelectorAll('[data-transport]:checked'))
+          .map(function (c) { return c.value; });
+        var bultos = isBultos();
+        var forma = bultos ? $('fFormaConsol').value : null;
+        var permitirEstiba = bultos && getSwitch('fPermitirEstiba');
+
+        return {
+          nombre: $('fNombre').value.trim(),
+          descripcion: $('fDescripcion').value.trim(),
+          tipoArmado: $('fTipoArmado').value,
+          matriz: bultos ? $('fMatriz').value : '',
+          tipoTarima: $('fTipoTarima').value,
+          alturaMin: bultos && $('fAlturaMin').value !== '' ? Number($('fAlturaMin').value) : null,
+          alturaMax: $('fAlturaMax').value !== '' ? Number($('fAlturaMax').value) : computeAlturaMaxEfectiva(),
+          caraPrincipal: bultos ? '' : $('fCaraPrincipal').value,
+          superficie: !bultos && $('fSuperficie').value !== '' ? Number($('fSuperficie').value) : null,
+          desnivel: !bultos && $('fDesnivel').value !== '' ? Number($('fDesnivel').value) : null,
+          wallUsage: !bultos && $('fWallUsage').value !== '' ? Number($('fWallUsage').value) : null,
+          pesoMax: bultos && $('fPesoMax').value !== '' ? Number($('fPesoMax').value) : null,
+          volumenMax: bultos && $('fVolumenMax').value !== '' ? Number($('fVolumenMax').value) : null,
+          contenedores: bultos && $('fContenedores').value !== '' ? Number($('fContenedores').value) : null,
+          volumenMaxTarimaBultos: bultos && $('fVolumenMaxTarimaBultos').value !== ''
+            ? Number($('fVolumenMaxTarimaBultos').value) : null,
+          logicaEtiquetas: bultos ? getSwitch('fLogicaEtiquetas') : false,
+          validarExistenciaTienda: bultos ? $('fValidarTienda').checked : false,
+          ejecucionInterfazSalidaManual: bultos ? getSwitch('fInterfazManual') : false,
+          permitirConsolOc: bultos ? getSwitch('fPermitirConsol') : true,
+          formaConsolTiendas: forma || 'libre',
+          alturaMaxTiendaConsol: bultos && forma === 'cuadrantes' && $('fAlturaMaxTienda').value !== ''
+            ? Number($('fAlturaMaxTienda').value) : null,
+          maxTiendasPorTarima: bultos && (forma === 'secuencial-bultos' || forma === 'cuadrantes') && $('fMaxTiendasTarima').value !== ''
+            ? Number($('fMaxTiendasTarima').value) : null,
+          secuenciaCargaInversa: bultos ? getSwitch('fCargaInversa') : false,
+          permitirEstiba: permitirEstiba,
+          maxTarimasPorEstiba: permitirEstiba && $('fMaxTarimasEstiba').value !== ''
+            ? Number($('fMaxTarimasEstiba').value) : null,
+          transportes: transportes,
+          updatedBy: CURRENT_USER,
+          updatedAt: new Date().toISOString()
+        };
+      }
+
+      /* ---- Eventos ---- */
+      $('btnNuevoPerfil').addEventListener('click', openCreate);
+      $('cancelBtn').addEventListener('click', openList);
+
+      $('listColChooserBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        var panel = $('listColChooserPanel');
+        var open = panel.classList.toggle('hidden') === false;
+        $('listColChooserBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      $('exportBtn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        var panel = $('exportMenuPanel');
+        var open = panel.classList.toggle('hidden') === false;
+        $('exportBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.querySelectorAll('#exportMenuPanel [data-export]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          exportRecords(btn.getAttribute('data-export'));
+          $('exportMenuPanel').classList.add('hidden');
+          $('exportBtn').setAttribute('aria-expanded', 'false');
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.export-menu')) {
+          $('exportMenuPanel').classList.add('hidden');
+          $('exportBtn').setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.querySelectorAll('[data-nav-list]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          openList();
+        });
+      });
+
+      $('profilesTableBody').addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-act]');
+        if (!btn) return;
+        var id = btn.getAttribute('data-id');
+        var act = btn.getAttribute('data-act');
+        if (act === 'edit') openEdit(id);
+        else if (act === 'del') {
+          if (!window.confirm('¿Estás seguro de eliminar este registro? Esta acción no puede revertirse.')) return;
+          Store.remove(id);
+          showToast('Perfil eliminado.');
+          renderList();
+        }
+      });
+
+      $('pagFirst').addEventListener('click', function () { listState.page = 1; renderList(); });
+      $('pagPrev').addEventListener('click', function () { listState.page--; renderList(); });
+      $('pagNext').addEventListener('click', function () { listState.page++; renderList(); });
+      $('pagLast').addEventListener('click', function () {
+        listState.page = Math.max(1, Math.ceil(getFilteredRecords().length / listState.pageSize) || 1);
+        renderList();
+      });
+      $('pageSizeSelect').addEventListener('change', function () {
+        listState.pageSize = Number(this.value) || 10;
+        listState.page = 1;
+        renderList();
+      });
+
+      $('submitBtn').addEventListener('click', function () {
+        if (!validate()) {
+          showToast('Revisa los campos obligatorios.');
+          return;
+        }
+        var values = collectValues();
+        if (editingId) {
+          var prev = Store.getById(editingId);
+          values.id = editingId;
+          values.createdAt = prev && prev.createdAt ? prev.createdAt : values.updatedAt;
+          Store.upsert(values);
+          showToast('Perfil actualizado.');
+        } else {
+          var maxId = Store.load().reduce(function (m, r) {
+            var n = parseInt(String(r.id).replace(/\D/g, ''), 10);
+            return isNaN(n) ? m : Math.max(m, n);
+          }, 0);
+          values.id = String(maxId + 1).padStart(4, '0');
+          values.createdAt = values.updatedAt;
+          Store.upsert(values);
+          showToast('Perfil creado.');
+        }
+        openList();
+      });
+
+      $('fTipoArmado').addEventListener('change', function () {
+        refreshConditionalFields();
+        populateMatrices();
+        applySiteDefaults();
+      });
+      $('fTipoTarima').addEventListener('change', applyTarimaDims);
+      $('fFormaConsol').addEventListener('change', refreshConsolFields);
+
+      bindSwitch('fLogicaEtiquetas');
+      bindSwitch('fInterfazManual');
+      bindSwitch('fPermitirConsol');
+      bindSwitch('fCargaInversa');
+      bindSwitch('fPermitirEstiba', refreshConsolFields);
+
+      populateTarimas();
+      buildTransportGrid();
+      buildColumnPicker();
+      openList();
+    })();
+  </script>
+</body>
+</html>
